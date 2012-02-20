@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  test.h
 //  PTree
 //
 //  Created by Semen Zhydenko on 2/17/12.

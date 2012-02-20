@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  ptreecreator.cpp
 //  PTree
 //
 //  Created by Semen Zhydenko on 2/20/12.
@@ -9,25 +9,32 @@
 #ifndef PTREECREATOR_H_
 #define PTREECREATOR_H_
 
+#include <vector>
 #include "ptree.h"
 
 class PTreeCreator {
 
 public:
 	typedef double MistakeProbability;
+	typedef size_t NumberOfElements;
 
 public:
 
 	PTreeCreator();
 
-public:
-	PTree* makeTree(const PTree::TOrder& preOrder, const PTree::TOrder& inOrder);
-	PTree* generateRandomTree(size_t size);
-	PTree* copyTree(const PTree *tree, MistakeProbability mistakeProbability);
+	PTree* makeTree(const PTree::TOrder& preOrder, const PTree::TOrder& inOrder) const;
+	PTree* generateRandomTree(NumberOfElements size) const;
+	PTree* copyTree(const PTree *tree, MistakeProbability mistakeProbability) const;
 
 private:
+	typedef std::vector<int> UnsortedData;
+
+private:
+
+	void generateRandomTree(PTree *tree, const UnsortedData& data) const;
+	UnsortedData getTreeElements(NumberOfElements size) const;
 	bool produceMistake(MistakeProbability mistakeProbability) const;
-	PTree* copy(PTree *tree, MistakeProbability mistakeProbability);
+	PTree* copy(PTree *tree, MistakeProbability mistakeProbability) const;
 };
 
 

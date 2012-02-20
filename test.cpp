@@ -1,9 +1,10 @@
-/*
- * test.cpp
- *
- *  Created on: Feb 19, 2012
- *      Author: ss18
- */
+//
+//  main.cpp
+//  PTree
+//
+//  Created by Semen Zhydenko on 2/17/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
 
 #include "ptree.h"
 #include <memory>

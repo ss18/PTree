@@ -1,9 +1,10 @@
-/*
- * test.h
- *
- *  Created on: Feb 19, 2012
- *      Author: ss18
- */
+//
+//  main.cpp
+//  PTree
+//
+//  Created by Semen Zhydenko on 2/17/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
 
 #ifndef TEST_H_
 #define TEST_H_

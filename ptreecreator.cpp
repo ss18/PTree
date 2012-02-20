@@ -1,4 +1,10 @@
-
+//
+//  main.cpp
+//  PTree
+//
+//  Created by Semen Zhydenko on 2/20/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
 
 #include "ptreecreator.h"
 #include <cstdlib>

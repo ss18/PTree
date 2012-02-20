@@ -1,9 +1,10 @@
-/*
- * ptreecreator.h
- *
- *  Created on: Feb 19, 2012
- *      Author: ss18
- */
+//
+//  main.cpp
+//  PTree
+//
+//  Created by Semen Zhydenko on 2/20/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
 
 #ifndef PTREECREATOR_H_
 #define PTREECREATOR_H_

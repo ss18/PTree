@@ -10,6 +10,7 @@
 #include <memory>
 #include <assert.h>
 #include <iostream>
+#include "ptreecreator.h"
 
 void testOneTree(const PTree *tree, size_t treeSize,
 					const int *preOrder, const int *inOrder, const int *postOrder) {
@@ -116,4 +117,11 @@ void testPTree() {
 	assert(*tree2.get() != *tree3.get());
 	assert(*tree3.get() != *tree4.get());
 	assert(*tree4.get() != *tree1.get());
+    
+    PTreeCreator creator;
+    std::auto_ptr<PTree> tree5(creator.generateRandomTree(99));
+    PTree::TOrder pre_ = tree5.get()->getPreOrder();
+    PTree::TOrder in_ = tree5.get()->getInOrder();
+    PTree::TOrder post_ = tree5.get()->getPostOrder();
+    testOneTree(tree5.get(), 99, &pre_[0], &in_[0], &post_[0]);
 }

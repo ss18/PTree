@@ -13,12 +13,14 @@
 #include <string>
 
 class PTreeCreator;
+class PTreeAnalyzer;
 
 class PTree {
 public:
 
     typedef std::vector<int> TOrder;
     friend class PTreeCreator;
+    friend class PTreeAnalyzer;
 
 public:
     PTree(int val);
@@ -49,7 +51,7 @@ private:
     void getSubRepresentation(std::stringstream& stream) const;
     void restore(TOrder& preOrder, const TOrder& inOrder);
 
-    static PTree* copy(PTree *tree);
+    static PTree* copy(const PTree *tree);
 
 private:
 

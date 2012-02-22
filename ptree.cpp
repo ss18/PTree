@@ -185,7 +185,7 @@ void PTree::restore(TOrder& preOrder, const TOrder& inOrder) {
 	}
 }
 
-PTree* PTree::copy(PTree *tree) {
+PTree* PTree::copy(const PTree *tree) {
 	if (tree == NULL) {
 		return NULL;
 	}

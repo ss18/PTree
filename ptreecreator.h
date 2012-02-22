@@ -25,6 +25,9 @@ public:
 	PTree* makeTree(const PTree::TOrder& preOrder, const PTree::TOrder& inOrder) const;
 	PTree* generateRandomTree(NumberOfElements size) const;
 	PTree* copyTree(const PTree *tree, MistakeProbability mistakeProbability) const;
+    
+    PTree* restore(const PTree::TOrder& preOrder, const PTree::TOrder& inOrder, const PTree::TOrder& postOrder) const;
+    
 
 private:
 	typedef std::vector<int> UnsortedData;

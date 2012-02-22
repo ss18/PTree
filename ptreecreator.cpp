@@ -8,6 +8,8 @@
 
 #include "ptreecreator.h"
 #include <cstdlib>
+#include <iostream>
+#include <assert.h>
 
 //
 // Public stuff
@@ -34,6 +36,25 @@ PTree* PTreeCreator::generateRandomTree(NumberOfElements size) const {
 PTree* PTreeCreator::copyTree(const PTree *tree, MistakeProbability mistakeProbability) const {
 	PTree tr = *tree;
 	return copy(&tr, mistakeProbability);
+}
+
+PTree* PTreeCreator::restore(const PTree::TOrder& preOrder, const PTree::TOrder& inOrder, const PTree::TOrder& postOrder) const {
+    
+    assert(preOrder.size() == inOrder.size());
+    assert(inOrder.size() == postOrder.size());
+    
+//  (pre, in, post)
+//  (true, true, true)      -> root = pre[0] = post[0]
+//  (true, true, flase)     -> root = pre[0] != post[0]
+//  (true, false, true)     -> 
+//  (true, false, false)    ->
+//  (false, true, true)     ->
+//  (false, true, false)    ->
+//  (false, false, true)    ->
+//  (false, false, false)   ->
+    
+    
+    return NULL;
 }
 
 //

@@ -20,10 +20,14 @@ class PTreeAnalyzer {
     
 public:    
     PTreeAnalyzer(const PTree *origin, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
-    void analyze();
+    bool analyze();
     
 private:
     PTree *analyze(PTree *tree, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
+    size_t analyze(const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
+    size_t countZerosFromLeft(const PTree::TOrder& order_);
+    
+    bool check(PTree::TOrder::value_type value);
     
 private:
 

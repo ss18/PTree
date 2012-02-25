@@ -9,6 +9,7 @@
 #include "ptreecreator.h"
 #include <cstdlib>
 #include <iostream>
+#include <algorithm>
 #include <assert.h>
 
 //

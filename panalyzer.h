@@ -13,21 +13,38 @@
 #ifndef PTree_panalyzer_h
 #define PTree_panalyzer_h
 
+#include <vector>
+
 #include "ptree.h"
 #include "ptreecreator.h"
 
 class PTreeAnalyzer {
     
+    typedef std::vector<size_t> TPossibleSizes;
+    
+    struct Iteration {
+        PTree::TOrder::value_type node;
+        size_t sizeofLeftSubTree;
+    };
+    
 public:    
     PTreeAnalyzer(const PTree *origin, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
-    bool analyze();
+    
+    PTree* restore() const;
+    
+    bool analyze() const;
     
 private:
-    PTree *analyze(PTree *tree, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
-    size_t analyze(const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
-    size_t countZerosFromLeft(const PTree::TOrder& order_);
+
+    void restore(PTree* tree, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
     
-    bool check(PTree::TOrder::value_type value);
+    Iteration getNode(const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
+    
+    bool check1(PTree::TOrder::value_type value, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
+    size_t check2(PTree::TOrder::value_type value, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
+    
+    TPossibleSizes getFromLeft(const PTree::TOrder& pre_, const PTree::TOrder post_) const;
+    size_t countZerosFromLeft(const PTree::TOrder& order_) const;
     
 private:
 

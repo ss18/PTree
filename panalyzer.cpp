@@ -22,7 +22,6 @@ PTreeAnalyzer::PTreeAnalyzer(const PTree *origin, const PTree::TOrder& pre_, con
 }
 
 PTree* PTreeAnalyzer::restore() const {
-    
     PTree *tree = new PTree(0, NULL, NULL);
     restore(tree, falsePreOrder, falseInOrder, falsePostOrder);
     return tree;
@@ -60,9 +59,6 @@ bool PTreeAnalyzer::analyze() const {
 //
 
 void PTreeAnalyzer::restore(PTree* tree,  PTree::TOrder& pre_,  PTree::TOrder& in_,  PTree::TOrder post_) const throw(UnableToRestore) {
-    PTree::printOrder(pre_);
-    PTree::printOrder(in_);
-    PTree::printOrder(post_);    
     
     IterationData data = getIterationData(pre_, in_, post_);
     tree->value = data.node;
@@ -82,11 +78,12 @@ void PTreeAnalyzer::restore(PTree* tree,  PTree::TOrder& pre_,  PTree::TOrder& i
 PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder postOrder) const throw(UnableToRestore) {
     assert(preOrder.size() > 0);
     assert(inOrder.size() > 0);
-    assert(postOrder.size() > 0);    
+    assert(postOrder.size() > 0);
     
-    assert(preOrder.size() == inOrder.size());
-    assert(inOrder.size() == postOrder.size());    
-    
+    if (getUniqIntersection(preOrder, inOrder).size() != getUniqIntersection(inOrder, postOrder).size()) {
+    	throw UnableToRestore();
+    }
+
     PTreeAnalyzer::IterationData data;
     data.node = 0;
     
@@ -168,9 +165,7 @@ PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preO
 bool PTreeAnalyzer::case1Check(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const {
     PTree::TOrder::const_iterator iter = std::find(inOrder.begin(), inOrder.end(), node);
     size_t leftTreeLen = iter - inOrder.begin();
-    
     assert(iter != inOrder.end());
-    
     PTree::TOrder o1(inOrder.begin(), iter);
     PTree::TOrder o2(start, start + leftTreeLen);
     assert(o1.size() == o2.size());

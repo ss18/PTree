@@ -19,9 +19,7 @@
 #include "ptreecreator.h"
 
 class PTreeAnalyzer {
-    
-    typedef std::vector<size_t> TPossibleSizes;
-    
+
     struct IterationData {
         PTree::TOrder::value_type node;
         

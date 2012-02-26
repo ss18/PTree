@@ -15,26 +15,15 @@
 #include "panalyzer.h"
 
 int main (int argc, const char * argv[]) {
-
-    int s = 0;
-    int x = 0;
+    int count = 0;
     
     PTreeCreator creator;
-    for (int i = 0; i < 1000; i++) {
-        PTreeCreator::MistakeProbability P = 0.05;
-        PTree *origin = creator.generateRandomTree(50);
+    for (int i = 0; i < 10000; i++) {
+        PTreeCreator::MistakeProbability P = 0.1;
+        PTree *origin = creator.generateRandomTree(10);
         PTree *falseOrigin1 = creator.copyTree(origin, P);
         PTree *falseOrigin2 = creator.copyTree(origin, P);
         PTree *falseOrigin3 = creator.copyTree(origin, P);
-        
-        
-//        size_t len = falseOrigin3->getPostOrder().size();
-//        if (falseOrigin1->getPreOrder()[0] == falseOrigin3->getPostOrder()[len - 1]) {
-//            --i;
-//            continue;
-//        }
-        
-        x++;
         
         PTreeAnalyzer analyzer(origin, falseOrigin1->getPreOrder(), falseOrigin2->getInOrder(), falseOrigin3->getPostOrder());
         PTree *restored = NULL;
@@ -45,7 +34,7 @@ int main (int argc, const char * argv[]) {
         }
         
         if (restored != NULL && *restored == *origin) {
-            s++;
+            count++;
         }
             
         delete restored;
@@ -56,7 +45,7 @@ int main (int argc, const char * argv[]) {
         delete origin;
     }
     
-    std::cout << s << " / " << x <<  std::endl;;
+    std::cout << count <<  std::endl;;
     
     
     return 0;

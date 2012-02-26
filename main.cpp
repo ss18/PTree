@@ -15,10 +15,11 @@
 #include "panalyzer.h"
 
 int main (int argc, const char * argv[]) {
+
     int count = 0;
     
     PTreeCreator creator;
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 1000; i++) {
         PTreeCreator::MistakeProbability P = 0.1;
         PTree *origin = creator.generateRandomTree(10);
         PTree *falseOrigin1 = creator.copyTree(origin, P);

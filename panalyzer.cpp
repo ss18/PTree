@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#include <iostream>
 #include <algorithm>
 #include "panalyzer.h"
 #include <assert.h>
@@ -75,11 +74,12 @@ void PTreeAnalyzer::restore(PTree* tree,  PTree::TOrder& pre_,  PTree::TOrder& i
     
 }
 
-PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder postOrder) const throw(UnableToRestore) {
+PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const throw(UnableToRestore) {
     assert(preOrder.size() > 0);
     assert(inOrder.size() > 0);
     assert(postOrder.size() > 0);
     
+    // it could happens because of previous statistic errors
     if (getUniqIntersection(preOrder, inOrder).size() != getUniqIntersection(inOrder, postOrder).size()) {
     	throw UnableToRestore();
     }
@@ -93,67 +93,28 @@ PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preO
     } else if (*preOrder.begin() == *(postOrder.end() - 1)) {
         data.node = *preOrder.begin();
 
-        if (case1Check(data.node, preOrder.begin() + 1, inOrder)) {
-            
-            PTree::TOrder::iterator inCenter = std::find(inOrder.begin(), inOrder.end(), data.node);
-            size_t leftTreeLen = inCenter - inOrder.begin();
-            
-            data.leftPreOrder = PTree::TOrder(preOrder.begin() + 1, preOrder.begin() + 1 + leftTreeLen);            
-            data.rightPreOrder = PTree::TOrder(preOrder.begin() + 1 + leftTreeLen, preOrder.end());
-            
-            data.leftInOrder = PTree::TOrder(inOrder.begin(), inCenter);
-            data.rightInOrder = PTree::TOrder(inCenter + 1, inOrder.end());
-            
-            data.leftPostOrder = PTree::TOrder(postOrder.begin(), postOrder.begin() + leftTreeLen);
-            data.rightPostOrder = PTree::TOrder(postOrder.begin() + leftTreeLen, postOrder.end() - 1);
-            
+        if (ifNodeHasProperInOrderPosition(data.node, preOrder.begin() + 1, inOrder)) {
+        	// case 1,
+        	fillIterationDataForInOrderPosition(data, preOrder, inOrder, postOrder);
         } else {
-            throw UnableToRestore();
+        	// case 2,
+        	fillIterationDataForWrongInOrder(data, preOrder, inOrder, postOrder);
         }
         
     } else {
         
-        if (case1Check(*preOrder.begin(), preOrder.begin() + 1, inOrder)) {
+        if (ifNodeHasProperInOrderPosition(*preOrder.begin(), preOrder.begin() + 1, inOrder)) {
+        	// case 3,
             data.node = *preOrder.begin();
+            fillIterationDataForInOrderPosition(data, preOrder, inOrder, postOrder);
             
-            // swap post order
-            std::swap(*(postOrder.end() - 1), *std::find(postOrder.begin(), postOrder.end(), data.node));            
-            
-            PTree::TOrder::iterator inCenter = std::find(inOrder.begin(), inOrder.end(), data.node);
-            size_t leftTreeLen = inCenter - inOrder.begin();
-            
-            data.leftPreOrder = PTree::TOrder(preOrder.begin() + 1, preOrder.begin() + 1 + leftTreeLen);            
-            data.rightPreOrder = PTree::TOrder(preOrder.begin() + 1 + leftTreeLen, preOrder.end());
-        
-            data.leftInOrder = PTree::TOrder(inOrder.begin(), inCenter);
-            data.rightInOrder = PTree::TOrder(inCenter + 1, inOrder.end());
-            
-            data.leftPostOrder = PTree::TOrder(postOrder.begin(), postOrder.begin() + leftTreeLen);
-            data.rightPostOrder = PTree::TOrder(postOrder.begin() + leftTreeLen, postOrder.end() - 1);            
-            
-            
-        } else if (case1Check(*(postOrder.end() - 1), postOrder.begin(), inOrder)) {
-            data.node = *(postOrder.end() - 1);
-            
-            // swap pre order
-            std::swap(*preOrder.begin(), *std::find(preOrder.begin(), preOrder.end(), data.node));
-            
-            PTree::TOrder::iterator inCenter = std::find(inOrder.begin(), inOrder.end(), data.node);
-            size_t leftTreeLen = inCenter - inOrder.begin();            
-
-            data.leftPreOrder = PTree::TOrder(preOrder.begin() + 1, preOrder.begin() + 1 + leftTreeLen);
-            data.rightPreOrder = PTree::TOrder(preOrder.begin() + 1 + leftTreeLen, preOrder.end());
-            
-            data.leftPreOrder = PTree::TOrder(preOrder.begin() + 1, preOrder.begin() + 1 + leftTreeLen);            
-            data.rightPreOrder = PTree::TOrder(preOrder.begin() + 1 + leftTreeLen, preOrder.end());
-            
-            data.leftInOrder = PTree::TOrder(inOrder.begin(), inCenter);
-            data.rightInOrder = PTree::TOrder(inCenter + 1, inOrder.end());
-            
-            data.leftPostOrder = PTree::TOrder(postOrder.begin(), postOrder.begin() + leftTreeLen);
-            data.rightPostOrder = PTree::TOrder(postOrder.begin() + leftTreeLen, postOrder.end() - 1);
+        } else if (ifNodeHasProperInOrderPosition(*(postOrder.end() - 1), postOrder.begin(), inOrder)) {
+        	// case 4:
+        	data.node = *(postOrder.end() - 1);
+            fillIterationDataForInOrderPosition(data, preOrder, inOrder, postOrder);
             
         } else {
+        	// case 5,
             throw UnableToRestore();
         }
     }
@@ -162,14 +123,49 @@ PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preO
     return data;
 }
 
-bool PTreeAnalyzer::case1Check(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const {
+bool PTreeAnalyzer::ifNodeHasProperInOrderPosition(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const {
     PTree::TOrder::const_iterator iter = std::find(inOrder.begin(), inOrder.end(), node);
     size_t leftTreeLen = iter - inOrder.begin();
     assert(iter != inOrder.end());
+
     PTree::TOrder o1(inOrder.begin(), iter);
     PTree::TOrder o2(start, start + leftTreeLen);
-    assert(o1.size() == o2.size());
     return o1.size() == getUniqIntersection(o1, o2).size();
+}
+
+void PTreeAnalyzer::fillIterationDataForInOrderPosition(IterationData& data, PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const {
+
+	// move preOrder node to the right place, if needed
+	std::swap(*preOrder.begin(), *std::find(preOrder.begin(), preOrder.end(), data.node));
+
+	// move postOrder node to the right place, if needed
+	std::swap(*(postOrder.end() - 1), *std::find(postOrder.begin(), postOrder.end(), data.node));
+
+	PTree::TOrder::iterator inCenter = std::find(inOrder.begin(), inOrder.end(), data.node);
+    size_t leftTreeLen = inCenter - inOrder.begin();
+
+    data.leftPreOrder = PTree::TOrder(preOrder.begin() + 1, preOrder.begin() + 1 + leftTreeLen);
+    data.rightPreOrder = PTree::TOrder(preOrder.begin() + 1 + leftTreeLen, preOrder.end());
+
+    data.leftInOrder = PTree::TOrder(inOrder.begin(), inCenter);
+    data.rightInOrder = PTree::TOrder(inCenter + 1, inOrder.end());
+
+    data.leftPostOrder = PTree::TOrder(postOrder.begin(), postOrder.begin() + leftTreeLen);
+    data.rightPostOrder = PTree::TOrder(postOrder.begin() + leftTreeLen, postOrder.end() - 1);
+}
+
+void PTreeAnalyzer::fillIterationDataForWrongInOrder(IterationData& data, PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const {
+	int mult = -1;
+	for(size_t pos = inOrder.size()/2, add = 0; pos < inOrder.size() && pos >=0; add++, mult *= -1) {
+		PTree::TOrder modifiedInOrder = inOrder;
+		std::swap(modifiedInOrder[pos], *std::find(modifiedInOrder.begin(), modifiedInOrder.end(), data.node));
+		if (ifNodeHasProperInOrderPosition(data.node, preOrder.begin() + 1, modifiedInOrder) &&
+				ifNodeHasProperInOrderPosition(data.node, postOrder.begin(), modifiedInOrder)) {
+			fillIterationDataForInOrderPosition(data, preOrder, modifiedInOrder, postOrder);
+			break;
+		}
+		pos += add*mult;
+	}
 }
 
 PTree::TOrder PTreeAnalyzer::getUniqIntersection(const PTree::TOrder& o1, const PTree::TOrder& o2) const {

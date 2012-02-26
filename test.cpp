@@ -9,7 +9,6 @@
 #include "ptree.h"
 #include <memory>
 #include <assert.h>
-#include <iostream>
 #include "ptreecreator.h"
 
 void testOneTree(const PTree *tree, size_t treeSize,

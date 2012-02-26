@@ -43,8 +43,10 @@ public:
 private:
 
     void restore(PTree* tree,  PTree::TOrder& pre_,  PTree::TOrder& in_,  PTree::TOrder post_) const throw(UnableToRestore);
-    IterationData getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder postOrder) const throw(UnableToRestore);
-    bool case1Check(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const;
+    IterationData getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const throw(UnableToRestore);
+    bool ifNodeHasProperInOrderPosition(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const;
+    void fillIterationDataForInOrderPosition(IterationData& data, PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const;
+    void fillIterationDataForWrongInOrder(IterationData& data, PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder& postOrder) const;
     PTree::TOrder getUniqIntersection(const PTree::TOrder& o1, const PTree::TOrder& o2) const;
     
 private:

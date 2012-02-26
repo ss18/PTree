@@ -18,6 +18,7 @@ PTree* makeTestTree2();
 PTree* makeTestTree3();
 PTree* makeTestTree4();
 
+// run me for testing :)
 bool testPTree();
 
 

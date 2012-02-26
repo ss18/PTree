@@ -100,11 +100,14 @@ bool PTree::operator!=(const PTree& tree) const {
 }
 
 void PTree::printOrder(const TOrder& order) {
-    std::cout << "{ ";
-    for(TOrder::const_iterator i = order.begin(); i < order.end()- 1; i++) {
-    	std::cout << *i << ", ";
+    std::cout << "{";
+    if (order.size() > 0) {
+        for(TOrder::const_iterator i = order.begin(); i < order.end()- 1; i++) {
+            std::cout << *i << ", ";
+            }
+        std::cout << *(order.end()- 1);
     }
-    std::cout << *(order.end()- 1) << "}" << std::endl;
+    std::cout <<  "}" << std::endl;
 }
 
 //

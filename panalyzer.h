@@ -22,38 +22,45 @@ class PTreeAnalyzer {
     
     typedef std::vector<size_t> TPossibleSizes;
     
-    struct Iteration {
+    struct IterationData {
         PTree::TOrder::value_type node;
-        size_t sizeofLeftSubTree;
+        
+        PTree::TOrder leftPreOrder;
+        PTree::TOrder leftInOrder;
+        PTree::TOrder leftPostOrder;
+        
+        PTree::TOrder rightPreOrder;
+        PTree::TOrder rightInOrder;
+        PTree::TOrder rightPostOrder;
     };
     
 public:    
+    struct UnableToRestore {};
+    
+public:    
     PTreeAnalyzer(const PTree *origin, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_);
-    
     PTree* restore() const;
-    
     bool analyze() const;
     
 private:
 
-    void restore(PTree* tree, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
-    
-    Iteration getNode(const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
-    
-    bool check1(PTree::TOrder::value_type value, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
-    size_t check2(PTree::TOrder::value_type value, const PTree::TOrder& pre_, const PTree::TOrder& in_, const PTree::TOrder post_) const;
-    
-    TPossibleSizes getFromLeft(const PTree::TOrder& pre_, const PTree::TOrder post_) const;
-    size_t countZerosFromLeft(const PTree::TOrder& order_) const;
+    void restore(PTree* tree,  PTree::TOrder& pre_,  PTree::TOrder& in_,  PTree::TOrder post_) const throw(UnableToRestore);
+    IterationData getIterationData(PTree::TOrder& preOrder, PTree::TOrder& inOrder, PTree::TOrder postOrder) const throw(UnableToRestore);
+    bool case1Check(const PTree::TOrder::value_type node, const PTree::TOrder::const_iterator start, const PTree::TOrder& inOrder) const;
+    PTree::TOrder getUniqIntersection(const PTree::TOrder& o1, const PTree::TOrder& o2) const;
     
 private:
 
     // initial data
     const PTree *originTree;
     
-    const PTree::TOrder falsePreOrder;
-    const PTree::TOrder falseInOrder;
-    const PTree::TOrder falsePostOrder;
+    mutable PTree::TOrder falsePreOrder;
+    mutable PTree::TOrder falseInOrder;
+    mutable PTree::TOrder falsePostOrder;
+    
+    const PTree::TOrder originFalsePreOrderMutable;
+    const PTree::TOrder originFalseInOrderMutable;
+    const PTree::TOrder originFalsePostOrderMutable;
     
     // analyzer results data
     PTree *possibleTree;

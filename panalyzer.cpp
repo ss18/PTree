@@ -115,6 +115,7 @@ PTreeAnalyzer::IterationData PTreeAnalyzer::getIterationData(PTree::TOrder& preO
             
         } else {
         	// case 5,
+        	// will not handle probability p*p, so far
             throw UnableToRestore();
         }
     }
